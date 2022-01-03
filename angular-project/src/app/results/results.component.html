@@ -1,0 +1,163 @@
+<div *ngIf="dataFromParent[0].length==0">
+    <div class="alert alert-danger container col-md-8 mt-3" role="alert">
+        An error occured! Please try again later.
+    </div>
+</div>
+<div *ngIf="dataFromParent[0].length>0">
+    <div *ngIf="showNavtab" class="container col-md-8 mt-5">
+        <div class="d-flex justify-content-center">
+            <h3>Forecast at {{cityState}}</h3>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-warning" (click)="handleFavorite('modify')">
+                <svg *ngIf="!favStatus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-star" viewBox="0 0 16 16">
+                    <path
+                        d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
+                </svg>
+                <svg *ngIf="favStatus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                </svg>
+
+            </button>
+            <button class="btn btn-link" [disabled]="!hasDetails" (click)="hasDetails && switchList()">Details
+                &gt;</button>
+        </div>
+
+
+
+        <ul class="nav nav-tabs mt-2 justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link" (click)="viewdaily()" [ngClass]="{'active': active1}" href="#here">Day view</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="viewchart1()" [ngClass]="{'active': active2}" href="#here">Daily Temp.
+                    Chart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="viewchart2()" [ngClass]="{'active': active3}" href="#here">Meteogram</a>
+            </li>
+        </ul>
+
+
+
+    </div>
+
+
+    <div [@slideInOut] *ngIf="day15">
+        <div class="container col-md-10">
+            <div class="table-responsive">
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Temp High(°F)</th>
+                            <th scope="col">Temp Low(°F)</th>
+                            <th scope="col">Wind Speed(mph)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let element of dataFromParent[0]; let i=index">
+                            <th scope="row">{{i+1}}</th>
+                            <td><a href="#here" (click)="showDetails(i)">{{formatDate(element.Date)}}</a></td>
+                            <td class="mytd">
+                                <img class="weatherImg"
+                                    src={{weatherMaps[element.weatherCode][1]}}>{{weatherMaps[element.weatherCode][0]}}
+                            </td>
+                            <td>{{element.temperatureMax}}</td>
+                            <td>{{element.temperatureMin}}</td>
+                            <td>{{element.windSpeed}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div [@slideUlta] class="container col-md-8 mt-5 mb-5" *ngIf="detailsTable">
+        <div class="d-flex justify-content-between">
+            <div>
+
+                <button type="button" (click)="switchDetails()" class="btn btn-light btn-outline-dark mb-3"> &lt;
+                    List</button>
+            </div>
+
+            <h3>{{formatDate(dayData.Date)}}</h3>
+            <a class="twitter-share-button"
+                href="https://twitter.com/intent/tweet?text={{twitterString}}&hashtags=CSCI571WeatherForecast"
+                target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    class="bi bi-twitter" viewBox="0 0 16 16">
+                    <path
+                        d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+                </svg>
+            </a>
+        </div>
+
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th scope="row">Status</th>
+                    <td>{{weatherMaps[dayData.weatherCode][0]}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Max Temperature</th>
+                    <td>{{dayData.temperatureMax}} °F</td>
+                </tr>
+                <tr>
+                    <th scope="row">Min Temperature</th>
+                    <td>{{dayData.temperatureMin}} °F</td>
+                </tr>
+                <tr>
+                    <th scope="row">Apparent Temperature</th>
+                    <td>{{dayData.temperatureApparent}} °F</td>
+                </tr>
+                <tr>
+                    <th scope="row">Sun Rise Time</th>
+                    <td>{{convertTime(dayData.sunriseTime)}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Sun Set Time</th>
+                    <td>{{convertTime(dayData.sunsetTime)}}</td>
+                    <!-- convertTime(dayData.sunsetTime) -->
+                </tr>
+                <tr>
+                    <th scope="row">Humidity</th>
+                    <td>{{dayData.humidity}}%</td>
+                </tr>
+                <tr>
+                    <th scope="row">Wind Speed</th>
+                    <td>{{dayData.windSpeed}} mph</td>
+                </tr>
+                <tr>
+                    <th scope="row">Visibility</th>
+                    <td>{{dayData.visibility}} mi</td>
+                </tr>
+                <tr>
+                    <th scope="row">Moon Phase</th>
+                    <td>{{dayData.moonPhase}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Cloud Cover</th>
+                    <td>{{dayData.cloudCover}} %</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- <div class="container col-md-8">
+            <div class="d-flex justify content-center my-google-map mt-3 justify-content-center"> -->
+        <google-map width="100%" [options]="mapOptions">
+            <map-marker [position]="marker.position"></map-marker>
+        </google-map>
+        <!-- </div>
+        </div> -->
+    </div>
+</div>
+
+
+<app-chart1 [tomorrowResponse]='dataFromParent' *ngIf="viewTempChart"></app-chart1>
+
+<app-chart2 [tomorrowResponse]='dataFromParent' *ngIf="viewMeteogram"></app-chart2>

@@ -1,0 +1,34 @@
+.my-form-background{
+  border-radius: 12px;
+  background-color: #f4f4f4;
+  border: 3px solid #e4e4e4;
+}
+
+.red-feedback{
+  color:red;
+  font-size: small;
+}
+
+.required:after {
+  content: " *";
+  color: red;
+}
+
+/* .pac-container{
+  color:red;
+} */
+
+@media screen and (max-width: 576px) {
+  button {
+    font-size: small;
+  }
+
+  form{
+    font-size: small;
+  }
+
+  h2{
+    font-size: large;
+    font-weight: 500;
+  }
+}
